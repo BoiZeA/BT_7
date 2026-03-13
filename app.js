@@ -39,9 +39,19 @@ app.use(function(err, req, res, next) {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
+  // render the error page or json if api
   res.status(err.status || 500);
-  res.render('error');
+  
+  if (req.originalUrl.startsWith('/api/')) {
+    res.json({
+      status: 'error',
+      message: err.message,
+      error: req.app.get('env') === 'development' ? err : {}
+    });
+  } else {
+    // Fallback if views are missing
+    res.send(`Error: ${err.message}`);
+  }
 });
 
 module.exports = app;

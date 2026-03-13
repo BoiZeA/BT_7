@@ -94,6 +94,19 @@ class User {
     }
     return null;
   }
+
+  static changePassword(id, oldPassword, newPassword) {
+    const user = this.getById(id);
+    if (!user) {
+      return { error: 'User not found' };
+    }
+    if (user.password !== oldPassword) {
+      return { error: 'Incorrect old password' };
+    }
+    user.password = newPassword;
+    user.timestamp = new Date();
+    return user;
+  }
 }
 
 module.exports = User;

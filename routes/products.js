@@ -51,22 +51,22 @@ router.get('/:id', function (req, res, next) {
     })
   }
 });
-router.post('/', function (req, res, next) {
-  let newObj = {
-    id: IncrementalId(data),
-    title: req.body.title,
-    slug: slugify(req.body.title, {
-      replacement: '-', lower: true, locale: 'vi',
-    }),
-    price: req.body.price,
-    description: req.body.description,
-    category: req.body.categoryId,
-    images: req.body.images,
-    creationAt: new Date(Date.now()),
-    updatedAt: new Date(Date.now())
+router.post('/', async function (req, res, next) {
+  try {
+    const Product = require('../models/Product');
+    const newProduct = new Product({
+      title: req.body.title,
+      price: req.body.price,
+      description: req.body.description,
+      categoryId: req.body.categoryId,
+      images: req.body.images
+    });
+    await newProduct.save();
+    res.status(201).json(newProduct);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
-  res.send(newObj);
-})
+});
 router.put('/:id', function (req, res, next) {
   let result = data.find(
     function (e) {

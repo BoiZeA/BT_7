@@ -7,6 +7,11 @@ var logger = require('morgan');
 
 var app = express();
 
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://127.0.0.1:27017/nnptud-c6')
+  .then(() => console.log('MongoDB Connected successfully!'))
+  .catch((err) => console.log('MongoDB connection error: ', err));
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -27,6 +32,7 @@ app.use('/api/v1/users', require('./routes/users'));
 app.use('/api/v1/products', require('./routes/products'));
 app.use('/api/v1/categories', require('./routes/categories'));
 app.use('/api/v1/roles', require('./routes/roles'));
+app.use('/api/v1/inventories', require('./routes/inventories'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
